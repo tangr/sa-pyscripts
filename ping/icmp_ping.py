@@ -71,6 +71,9 @@
 
 import os, sys, socket, struct, select, time
 
+if __name__ == '__main__':
+    import argparse
+
 if sys.platform == "win32":
     # On Windows, the best timer is time.clock()
     default_timer = time.clock
@@ -219,5 +222,11 @@ def verbose_ping(dest_addr, timeout = 2, count = 1000000):
 
 
 if __name__ == '__main__':
-    verbose_ping("8.8.8.8")
+    parser = argparse.ArgumentParser(prog='icmp-ping',
+                                     description='A pure python implementation\
+                                      of the ping protocol. *REQUIRES ROOT*')
+    parser.add_argument('address', help='The address to attempt to ping.')
 
+    parsed = parser.parse_args()
+
+    sys.exit(verbose_ping(parsed.address))
