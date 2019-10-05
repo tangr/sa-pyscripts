@@ -9,6 +9,7 @@ import threading
 import sys
 import time
 import urllib
+import subprocess
 
 #替我们工作的线程池中的线程
 class MyThread(threading.Thread):
@@ -30,9 +31,8 @@ class MyThread(threading.Thread):
                 arg1 = self.workQueue.qsize()
                 res = callable(arg1, kwargs)
                 #报任务返回的结果放在结果队列中
-                self.resultQueue.put(str(arg1) + " | " + self.getName())
+                self.resultQueue.put(self.getName() + " | " + str(res))
                 arg2 = self.resultQueue.qsize()
-                print(arg2)
             except queue.Empty: #任务队列空的时候结束此线程
                 break
             except :
@@ -69,9 +69,20 @@ def workerfun(arg1, arg2):
         # conn = urllib.urlopen('http://www.baidu.com/')
         # html = conn.read(20)
         html = arg1
+        processes = subprocess.Popen(
+                    'echo ${PPID} "|" $$',
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    stdin=subprocess.PIPE,
+                    universal_newlines=True,
+                    cwd='/tmp'
+        )
+        line = processes.stdout.readline()
+        line = line.rstrip()
     except:
         print(sys.exc_info())
-    return html
+    return line
 
 
 def main():
