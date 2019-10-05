@@ -55,9 +55,11 @@ class ThreadPool:
         #等待所有线程完成。
         while len(self.threads):
             thread = self.threads.pop()
+            # print(threading.active_count())
+            # print(threading.enumerate())
             #等待线程结束
-        if thread.isAlive():#判断线程是否还存活来决定是否调用join
-            thread.join()
+            if thread.isAlive():#判断线程是否还存活来决定是否调用join
+                thread.join()
 
     def add_job(self, callable, *args, **kwargs):
         self.workQueue.put((callable, args, kwargs))
