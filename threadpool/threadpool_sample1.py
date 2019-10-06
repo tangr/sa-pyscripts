@@ -10,6 +10,7 @@ import sys
 import time
 import urllib
 import subprocess
+import os
 
 #替我们工作的线程池中的线程
 class MyThread(threading.Thread):
@@ -31,7 +32,7 @@ class MyThread(threading.Thread):
                 arg1 = self.workQueue.qsize()
                 res = callable(arg1, kwargs)
                 #报任务返回的结果放在结果队列中
-                self.resultQueue.put(self.getName() + " | " + str(res))
+                self.resultQueue.put(self.getName() + " | " + str(self.ident) + " | " + str(res))
                 arg2 = self.resultQueue.qsize()
             except queue.Empty: #任务队列空的时候结束此线程
                 break
@@ -94,6 +95,7 @@ def main():
         time.sleep(0.2)
         tp.add_job(workerfun, i)
     tp.wait_for_complete()
+
     #处理结果
     print('result Queue\'s length == %d '% tp.resultQueue.qsize())
     while tp.resultQueue.qsize():
