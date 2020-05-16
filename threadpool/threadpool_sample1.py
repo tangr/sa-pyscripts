@@ -50,7 +50,12 @@ class ThreadPool:
     def __createThreadPool(self, num_of_threads):
         for i in range( num_of_threads ):
             thread = MyThread(self.workQueue, self.resultQueue)
+            print('*****************')
+            print(thread.workQueue)
+            print(thread.workQueue.qsize())
+            print('*****************')
             self.threads.append(thread)
+            print(self.threads)
 
     def wait_for_complete(self):
         #等待所有线程完成。
@@ -90,10 +95,11 @@ def workerfun(arg1, arg2):
 
 def main():
     print('start testing')
-    tp = ThreadPool(10)
+    tp = ThreadPool(5)
     for i in range(20):
         time.sleep(0.2)
         tp.add_job(workerfun, i)
+        print(tp)
     tp.wait_for_complete()
 
     #处理结果
